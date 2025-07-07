@@ -1,5 +1,5 @@
 {
     "apps": [
-        ["/server_request.py", "False", [1]]
+        ["/test.py", "True", [1]]
     ]
 }

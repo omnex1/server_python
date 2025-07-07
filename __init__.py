@@ -1,7 +1,80 @@
 import os, json
 
+from multiprocessing import Process, Queue
+import time
+
+class Multiprocess:
+
+    class Slave(Process):
+        def __init__(self, num, task_queue, result_queue, functions):
+            super().__init__()
+            self.num = num
+            self.task_queue = task_queue
+            self.result_queue = result_queue
+            self.functions = functions
+
+        def run(self):
+            while True:
+                data = self.task_queue.get()
+                if not data["alive"]:
+                    break
+                if data["tasks"]:
+                    func_name, args = data["tasks"]
+                    output = self.functions[func_name](args)
+                    self.result_queue.put({"slave": self.num, "output": output})
+
+    def __init__(self, slave_num, functions):
+        self.slaves = {}
+        self.result_queues = {}
+        for i in range(slave_num):
+            task_queue = Queue()
+            result_queue = Queue()
+            slave = self.Slave(i, task_queue, result_queue, functions)
+            slave.start()
+            self.slaves[i] = task_queue
+            self.result_queues[i] = result_queue
+
+    def submit_task(self, task_data, child_index):
+        self.slaves[child_index].put({"tasks": task_data, "alive": True})
+
+    def get_result(self, child_index):
+        if not self.result_queues[child_index].empty():
+            return self.result_queues[child_index].get()
+        return None
+
+    def stop_process(self, child):
+        self.slaves[child].put({"tasks": [], "alive": False})
+
+
+def Print(value):
+    print(f"{__file__} --- {value}")
+
 #the initial program. runs all specified python scripts
 class start():
+
+    #its good practice for this script to not use print without the file its printing or things will spam with no info on the script thats doing it. this forces me to be smart
+    def check_for_bad_prints(self, file):
+        #this is so damn inneficient oh well
+
+        with open(file, "r") as prints:
+            file_data = prints.readlines()
+            print_num = 0
+            wrong_prints = []
+            line = 0
+
+            for i in file_data:
+                line += 1
+                if 'print(' in i:
+                    print_num += 1
+
+                    if print_num > 1:
+                        wrong_prints.append(line)
+
+            
+            if print_num > 1:
+                raise TypeError(f"err: please use Print() not print() in line(s) {wrong_prints}")
+            
+        return True
 
     def __init__(self):
         os.system("cls")
@@ -11,20 +84,49 @@ class start():
         self.data = json.loads(test.read())
         test.close()
 
-        print(self.data)
+        Print(self.data)
 
         self.run_apps()
     
     def run_apps(self):
+        
+        apps = []
         for i in self.data["apps"]:
             #i[0] is the name
             #i[1] is whether it should be on
             #i[2] is the arguments that should be passed
-            if bool(i[1]):
-                #if the app is enabled
-                os.system(f"python {os.getcwd() + i[0]} {i[2]}")
+
+            #if the app is enabled add the app to the list to run
+            if i[1] == "True":
+                
+                apps.append(i)
+
+        #build multiprocess based off of the number of py files to run
+        self.process = Multiprocess(len(apps), {"start_py": self.start_py})
+
+        slave_num = 0
+
+        
+
+        for i in apps:
+
+            #checking if my code doesnt have too many prints
+            if self.check_for_bad_prints(os.getcwd() + i[0]):
+                
+                #actually running the apps by assigning cpu processes to do that
+                self.process.submit_task(["start_py", f"python {os.getcwd() + i[0]} {i[2]}"], slave_num)
+                
+            slave_num += 1
+    
+    def start_py(self, data):
+        os.system(data)
 
 
 if __name__ == "__main__":
-    start()
+    init = start()
+    input()
+
+    #kills the processes once done
+    for i in init.process.slaves:
+        init.process.stop_process(i)
 
