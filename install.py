@@ -1,13 +1,17 @@
-import subprocess, sys
+import subprocess, sys, os
 
-process = subprocess.Popen([sys.executable, "-m", "pip", "install", "streamlit"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
+os.system("clear")
 
 def Print(value):
     print(f"{__file__} --- {value}")
 
+Print("start")
+
+process = subprocess.Popen([sys.executable, "-m", "pip", "install", "streamlit"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False)
+
 stdout, stderr = process.communicate()
 
-Print("start")
+
 Print(stdout.decode())
 Print(stderr.decode())
 Print("end")

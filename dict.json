@@ -1,7 +1,7 @@
 {
     "apps": [
-        ["/install.py", "True", "process", [], []],
+        ["/install.py", "False", "process", [], []],
         ["/test.py", "True", "process", [1], []],
-        ["/website.py", "True", "main", [], ["streamlit run website.py"]]
+        ["/website.py", "True", "main", [], ["streamlit run website.py --server.port 9229"]]
     ]
 }
