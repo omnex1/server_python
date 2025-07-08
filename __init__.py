@@ -14,14 +14,20 @@ class Multiprocess:
             self.functions = functions
 
         def run(self):
+            self.num = 0
             while True:
+                time.sleep(0.01)
+                self.num += 1
                 data = self.task_queue.get()
-                if not data["alive"]:
+                if not data["alive"] or self.num >= (60 * 100):
                     break
                 if data["tasks"]:
+                    self.num = 0
                     func_name, args = data["tasks"]
                     output = self.functions[func_name](args)
                     self.result_queue.put({"slave": self.num, "output": output})
+                
+                
 
     def __init__(self, slave_num, functions):
         self.slaves = {}
