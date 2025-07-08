@@ -1,6 +1,6 @@
 {
     "apps": [
-        ["/test.py", "True", "process", [1]],
-        ["/website.py", "True", "main", []]
+        ["/test.py", "True", "process", [1], []],
+        ["/website.py", "True", "main", [], ["streamlit run website.py"]]
     ]
 }

@@ -1,39 +1,80 @@
-import time, os
+import time, os, subprocess
+import streamlit as st
 
-class multithread:
+auth = False
 
-    class slave:
-        def __init__(self):
-            self.alive = True
-            self.task = []
-            self.output = ""
+def Print(value):
+    print(f"{__file__} --- {value}")
+
+
+# Dummy user credentials
+details = {"test": "password"}
+
+# Initialize state
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "user" not in st.session_state:
+    st.session_state.user = None
+
+# Login handler
+def login():
+    u = st.session_state.username
+    p = st.session_state.password
+    if u in details and details[u] == p:
+        st.session_state.logged_in = True
+        st.session_state.user = u  # Save the logged-in user
+        st.session_state.username = ""
+        st.session_state.password = ""
+    else:
+        st.error("Invalid credentials")
+
+# If logged in, show a welcome screen (and keep username)
+if st.session_state.logged_in:
+    
+
+    st.title(f"Welcome, {st.session_state.user}!")
+    try:
+
+        cmd = st.text_input("cmd to execute")
+
+        if cmd:
+            process = subprocess.Popen(cmd.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+
+            st.write("output:")
+
+            stdout, stderr = process.communicate()
             
-        def read_output(self):
-            while self.output == "":
-                pass
-            got_value = self.output
-            self.output = ""
-            return got_value
-        
-        def wait(self):
-            while self.alive:
-                if self.task:
-                    self.output = self.task[0](*self.task[1])
-                    self.task = []
-                time.sleep(0.1)
-        
+            st.write(stdout.decode())
+
+            st.write("done")
+
+    except Exception as e:
+
+        st.write("error:")
+        st.write(e)
+
+    try:
+
+        cmd = st.text_input("python to execute")
+
+        if cmd:
+
+            st.write("output:")
             
+            st.write(exec(cmd))
 
-    def __init__(self, threads_to_make: int):
-        import threading
-        self.slaves = {}
+            st.write("done")
 
-        for i in range(threads_to_make):
-            thread_made = self.slave()
-            slave_made = threading.Thread(target=thread_made.wait)
-            slave_made.start()
-            self.slaves[i] = thread_made
+    except Exception as e:
+        st.write("error:")
+        st.write(e)
+else:
 
-thread = multithread(1)
+    st.title("Login")
 
-os.system(f"python -m http.server 8000 --bind 192.168.1.105 --directory {os.getcwd()}/website")
+    st.text_input("Username", key="username")
+
+    st.text_input("Password", type="password", key="password")
+
+    st.button("Login", on_click=login)
+#os.system(f"streamlit run {os.getcwd()}\website.py --server.address 192.168.1.103")
