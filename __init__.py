@@ -140,6 +140,7 @@ class start():
             except:
                 for i in init.process.slaves:
                     init.process.stop_process(i)
+                print("ERRRR")
                 raise ImportError("failed running the module")
     def start_py(self, data):
         os.system(data)
