@@ -123,15 +123,29 @@ class start():
             slave_num += 1
     
         for i in main_tasks:
+<<<<<<< Updated upstream
             with open(f"{os.getcwd() + i[0]}", "r") as file:
                 exec(file.read())
 
+=======
+            try: 
+                with open(f"{os.getcwd() + i[0]}", "r") as file:
+                    exec(file.read())
+                    for j in i[4]:
+                        os.system(j)
+            except:
+                for i in init.process.slaves:
+                    init.process.stop_process(i)
+                raise ImportError("failed running the module")
+    
+>>>>>>> Stashed changes
     def start_py(self, data):
         os.system(data)
 
-
 if __name__ == "__main__":
+    
     init = start()
+
 
 
     #kills the processes once done
