@@ -1,6 +1,6 @@
 import subprocess
-process = subprocess.Popen("pip", "install", "streamlits", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+process = subprocess.Popen(["pip", "install", "streamlit"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
 stdout, stderr = process.communicate()
 
-print(stdout.decrypt())
+print(stdout.decode(), stderr.decode())
