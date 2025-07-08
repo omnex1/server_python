@@ -90,41 +90,49 @@ class start():
     
     def run_apps(self):
         
-        apps = []
+        process_apps = []
+        main_tasks = []
         for i in self.data["apps"]:
             #i[0] is the name
             #i[1] is whether it should be on
-            #i[2] is the arguments that should be passed
+            #i[2] is whether the process is ran my multiprocess or main
+            #i[3] is the arguments that should be passed
 
             #if the app is enabled add the app to the list to run
             if i[1] == "True":
-                
-                apps.append(i)
+                if i[2] == "process":
+                    process_apps.append(i)
+                else:
+                    main_tasks.append(i)
 
         #build multiprocess based off of the number of py files to run
-        self.process = Multiprocess(len(apps), {"start_py": self.start_py})
+        self.process = Multiprocess(len(process_apps), {"start_py": self.start_py})
 
         slave_num = 0
 
         
 
-        for i in apps:
+        for i in process_apps:
 
             #checking if my code doesnt have too many prints
             if self.check_for_bad_prints(os.getcwd() + i[0]):
                 
                 #actually running the apps by assigning cpu processes to do that
                 self.process.submit_task(["start_py", f"python {os.getcwd() + i[0]} {i[2]}"], slave_num)
-                
+        
             slave_num += 1
     
+        for i in main_tasks:
+            with open(f"{os.getcwd() + i[0]}", "r") as file:
+                exec(file.read())
+
     def start_py(self, data):
         os.system(data)
 
 
 if __name__ == "__main__":
     init = start()
-    input()
+
 
     #kills the processes once done
     for i in init.process.slaves:

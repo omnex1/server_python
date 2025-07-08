@@ -1,5 +1,6 @@
 {
     "apps": [
-        ["/test.py", "True", [1]]
+        ["/test.py", "True", "process", [1]],
+        ["/website.py", "True", "main", []]
     ]
 }
