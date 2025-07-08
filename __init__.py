@@ -124,13 +124,15 @@ class start():
             slave_num += 1
     
         for i in main_tasks:
-            with open(f"{os.getcwd() + i[0]}", "r") as file:
-                exec(file.read())
-                for j in i[4]:
-                    os.system(j)
-
-
             try: 
+
+                with open(f"{os.getcwd() + i[0]}", "r") as file:
+                    exec(file.read())
+                    for j in i[4]:
+                        os.system(j)
+
+
+            
                 with open(f"{os.getcwd() + i[0]}", "r") as file:
                     exec(file.read())
                     for j in i[4]:
