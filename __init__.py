@@ -97,6 +97,7 @@ class start():
             #i[1] is whether it should be on
             #i[2] is whether the process is ran my multiprocess or main
             #i[3] is the arguments that should be passed
+            #i[4] is any commands that need to be ran
 
             #if the app is enabled add the app to the list to run
             if i[1] == "True":
@@ -126,6 +127,8 @@ class start():
 <<<<<<< Updated upstream
             with open(f"{os.getcwd() + i[0]}", "r") as file:
                 exec(file.read())
+                for j in i[4]:
+                    os.system(j)
 
 =======
             try: 

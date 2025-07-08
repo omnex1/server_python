@@ -1,0 +1,4 @@
+[server]
+address = "110.144.145.190"
+enableCORS = false
+headless = false
