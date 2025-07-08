@@ -135,14 +135,9 @@ class start():
                 with open(f"{os.getcwd() + i[0]}", "r") as file:
                     exec(file.read())
                     for j in i[4]:
+                        Print("aaaaaaaaaaaaaaa")
                         os.system(j)
 
-
-            
-                with open(f"{os.getcwd() + i[0]}", "r") as file:
-                    exec(file.read())
-                    for j in i[4]:
-                        os.system(j)
             except:
                 for i in self.process.slaves:
                     self.process.stop_process(i)
