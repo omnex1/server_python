@@ -83,7 +83,7 @@ class start():
         return True
 
     def __init__(self):
-        os.system("cls")
+        os.system("clear")
 
         #getting the dictionary from dict.json and setting self.data to be that so we can access it
         test = open(f"{os.getcwd()}/dict.json", "r")
