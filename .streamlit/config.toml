@@ -1,5 +1,4 @@
 [server]
 address = "110.144.145.190"
-port = "7777"
 enableCORS = true
 headless = false

@@ -92,7 +92,7 @@ class start():
         
         process_apps = []
         main_tasks = []
-        for i in self.data["apps"]:
+        for i in self.data["mp_apps"]:
             #i[0] is the name
             #i[1] is whether it should be on
             #i[2] is whether the process is ran my multiprocess or main
