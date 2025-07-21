@@ -125,9 +125,10 @@ class start():
     
         for i in main_tasks:
             with open(f"{os.getcwd() + i[0]}", "r") as file:
-                exec(file.read())
+                
                 for j in i[4]:
                     os.system(j)
+                exec(file.read())
 
     def start_py(self, data):
         os.system(data)
