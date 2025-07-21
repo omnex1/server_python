@@ -1,6 +1,6 @@
 {
-    "apps": [
-        ["/test.py", "True", "process", [1], []],
-        ["/website.py", "True", "main", [], ["streamlit run website.py"]]
+    "mp_apps": [
+        ["True", "/test.py"],
+        ["True", "/website_init.py"]
     ]
 }
